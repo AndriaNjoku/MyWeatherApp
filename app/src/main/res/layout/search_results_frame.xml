@@ -6,13 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4E4E2E2"
+    android:background="#E0E0E0"
     android:orientation="vertical"
     tools:context=".onlyActivity.HomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#E6E6E6"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -36,10 +37,11 @@
             android:id="@+id/search_results"
             android:layout_width="327dp"
             android:layout_height="688dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="80dp"
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="8dp"
-            android:background="#7AAFAFAF"
+            android:background="#7AD6D6D6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,18 +63,18 @@
 
         <ImageView
             android:id="@+id/detail_button"
-            android:layout_width="63dp"
-            android:layout_height="69dp"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#CECDCD"
+            android:background="#E0E0E0"
             android:clickable="true"
-            android:rotation="-90"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/search_results"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.499"
-            app:srcCompat="@android:drawable/ic_menu_more" />
+            app:srcCompat="@drawable/chevron_right" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,7 +29,8 @@ class PojoGetWeatherForecast @Inject constructor(val service: ForecastService, v
         false -> forecastFromLocal(location)
     }
 
-    override fun getDetailed(location: String): Observable<Forecast> = forecastFromLocal(location)
+    override fun getDetailed(location: String): Observable<Forecast> =
+            forecastFromLocal(location)
 
     override fun getRecentForecasts(): Observable<List<Forecast>>  =
             database

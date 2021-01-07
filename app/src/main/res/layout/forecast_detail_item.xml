@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    app:cardBackgroundColor="#AACDD5"
+    app:cardBackgroundColor="#26899F"
     app:cardCornerRadius="15dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="9dp">
@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#A9CCD4">
+        android:background="#26899F">
 
         <TextView
             android:id="@+id/d_day"

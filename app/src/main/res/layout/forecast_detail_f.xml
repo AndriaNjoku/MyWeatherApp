@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4E4E2E2"
+    android:background="#E0E0E0"
     android:orientation="vertical"
     tools:context=".onlyActivity.HomeActivity">
 
@@ -36,7 +36,8 @@
             android:id="@+id/detail_results"
             android:layout_width="327dp"
             android:layout_height="688dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="2dp"
             android:layout_marginBottom="8dp"
             android:background="#7AAFAFAF"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,17 +63,19 @@
 
         <ImageView
             android:id="@+id/search_button"
-            android:layout_width="63dp"
+            android:layout_width="0dp"
             android:layout_height="69dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#CECDCD"
+            android:background="#E0E0E0"
             android:clickable="true"
-            android:rotation="90"
+            android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/detail_results"
+            app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_more" />
+            app:srcCompat="@drawable/chevron_right" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

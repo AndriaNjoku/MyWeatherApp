@@ -1,140 +1,111 @@
 package com.example.ForecastApp.weatherDetailScreen
 
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import butterknife.BindView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
-import butterknife.OnClick
 import butterknife.Unbinder
+import com.example.ForecastApp.App
 import com.example.ForecastApp.DI.composer.WeatherFeatureModule
 import com.example.ForecastApp.R
 import com.example.ForecastApp.adapter.WeatherDetailAdapter
-import com.example.ForecastApp.App
 import com.example.ForecastApp.model.weather.Day
-import com.example.ForecastApp.mvp.MainScreenFragment.WeatherDetailPresenter
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
+import com.example.ForecastApp.weatherDetailScreen.ui.WeatherDetailPresenter
+import kotlinx.android.synthetic.main.forecast_detail_f.*
 import javax.inject.Inject
-
 
 
 class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
 
-
     @Inject
-    lateinit var presenter: WeatherDetailPresenter.Presenter
+    lateinit var presenter: WeatherDetailPresenter
 
     private val forecastAdapter = WeatherDetailAdapter()
 
-    private lateinit var activityContext: Context
-
-    lateinit var location : String
+    lateinit var location: String
 
     var day: Int = 0
 
     var binder: Unbinder? = null
 
-    @BindView(R.id.search_button)
-    lateinit var searchb: ImageView
-    @BindView(R.id.detail_results)
-    lateinit var recyclerView: RecyclerView
-    @BindView(R.id.detail_progress)
-    lateinit var progressBar: ProgressBar
-    @BindView(R.id.detail_try_again)
-   lateinit var tryAgain: TextView
+    companion object {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        injectDependencies()
-        val view =inflater.inflate(R.layout.forecast_detail_f,container,false)
-        binder = ButterKnife.bind(this,view)
-        location = arguments?.getString("Location").toString()
-        presenter.attach(activityContext,this)
-            recyclerView.layoutManager = LinearLayoutManager(activityContext)
-            recyclerView.adapter = forecastAdapter
-        presenter.getDayDetails(location)
-        val b = activityContext as MainActivityPresenter.View
-        searchb.setOnClickListener {
-            Log.e("sclick","button clicked ")
-            b.showSearchResultsFragment(location)
+        fun newInstance(location: String): WeatherDetailFragment {
+            val detailFragment = WeatherDetailFragment()
+            val bundle = Bundle().apply {
+                putString("Location", location)
+            }
+            detailFragment.arguments = bundle
 
+            return detailFragment
         }
-        return view
-
     }
 
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        injectDependencies()
+        val view = inflater.inflate(R.layout.forecast_detail_f, container, false)
+        location = arguments?.getString("Location").toString()
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        detail_results.layoutManager = LinearLayoutManager(activity)
+        detail_results.adapter = forecastAdapter
+        presenter.getDayDetails(location)
+        val activityView = context as MainActivityPresenter.View
+        search_button.setOnClickListener {
+            activityView.showSearchResultsFragment(location)
+        }
+
+        detail_try_again.setOnClickListener {
+            presenter.getDayDetails(location)
+        }
+    }
 
     override fun showForecast(days: List<Day>) {
-
-      forecastAdapter.setData(days)
+        forecastAdapter.setData(days)
     }
 
     override fun injectDependencies() {
-
-       App.instance.component.plus(WeatherFeatureModule()).inject(this)
-
+        App.instance.component.plus(WeatherFeatureModule(activity)).inject(this)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        activityContext=context
-
+    override fun onDetach() {
+        super.onDetach()
+        presenter.dispose()
     }
 
     override fun showError(throwable: Throwable) {
         throwable.printStackTrace()
-        val myActivityView = activityContext as MainActivityPresenter.View
+        val myActivityView = context as MainActivityPresenter.View
 
         myActivityView.showError(throwable)
     }
 
     override fun showProgress(shouldShow: Boolean) {
-        progressBar.visibility = if (shouldShow) View.VISIBLE else View.GONE
+        detail_progress.visibility = if (shouldShow) View.VISIBLE else View.GONE
     }
 
-    override fun setActivityTitle(name: String?){
+    override fun setActivityTitle(name: String?) {
 
     }
 
     override fun showTryAgain(shouldShow: Boolean) {
         if (shouldShow) {
-            recyclerView.visibility = View.GONE
-            tryAgain.visibility = View.VISIBLE
+            detail_results.visibility = View.GONE
+            detail_try_again.visibility = View.VISIBLE
         } else {
-            tryAgain.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            detail_try_again.visibility = View.GONE
+            detail_results.visibility = View.VISIBLE
         }
-    }
-
-    @OnClick(R.id.detail_try_again)
-    fun onTryAgainClicked() {
-      // presenter.getWeatherDetails()
-    }
-
-    override fun onStop() {
-        super.onStop()
-      //  presenter.stop()
-    }
-    fun newInstance(location: String): WeatherDetailFragment {
-        val detailFragment = WeatherDetailFragment()
-        val bundle = Bundle().apply {
-            putString("Location", location)
-        }
-       detailFragment.arguments = bundle
-
-        return detailFragment
     }
 }
 

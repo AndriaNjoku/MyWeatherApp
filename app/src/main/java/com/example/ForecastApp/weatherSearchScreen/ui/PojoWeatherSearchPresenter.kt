@@ -1,32 +1,31 @@
 package com.example.ForecastApp.weatherSearchScreen.ui
 
+import android.app.Activity
 import android.content.Context
 import com.example.ForecastApp.onlyActivity.HomeActivity
 import com.example.ForecastApp.weatherSearchScreen.OnLocationSelectedListener
 import com.example.ForecastApp.useCase.GetWeatherForecast
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 
 class PojoWeatherSearchPresenter(
         val view: WeatherSearchPresenter.View,
-        private val mainActivityContext: Context,
-        getWeather: GetWeatherForecast,
-        foreground: Scheduler
+        private val mainActivityContext: Activity,
+        getWeather: GetWeatherForecast
 ) : WeatherSearchPresenter {
 
-    lateinit var disposable: CompositeDisposable
+    private val disposable = CompositeDisposable()
     private var listener: OnLocationSelectedListener? = null
 
     init {
         disposable.add(getWeather.getRecentForecasts()
-                .subscribeOn(foreground)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { view.showError(it) }
                 .subscribe { view.showRecentSavedSearches(it) })
-    }
-
-    override fun getWeatherDetails() {
-        TODO("Not yet implemented")
     }
 
     override fun setSelectedLocation(location: String) {
@@ -39,7 +38,7 @@ class PojoWeatherSearchPresenter(
     private fun checkIfListenerAttached() {
         if (listener == null) {
             try {
-                listener = mainActivityContext as HomeActivity
+                listener = mainActivityContext as OnLocationSelectedListener
             } catch (e: ClassCastException) {
                 throw ClassCastException("${mainActivityContext}must implement OnLocationSelectedListener")
             }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    app:cardBackgroundColor="#D7D7DA"
+    app:cardBackgroundColor="#26899F"
     app:cardCornerRadius="15dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="9dp">
@@ -12,14 +12,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#D6D6D9">
+        android:background="#26899F">
 
         <TextView
             android:id="@+id/r_location"
             android:layout_width="223dp"
             android:layout_height="73dp"
-            android:layout_marginStart="108dp"
+            android:layout_marginStart="105dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="49dp"
             android:textSize="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.38"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread_inside"

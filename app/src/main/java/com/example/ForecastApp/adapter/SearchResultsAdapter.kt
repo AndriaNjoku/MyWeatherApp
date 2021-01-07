@@ -63,12 +63,9 @@ class SearchResultsAdapter() : RecyclerView.Adapter<SearchResultsAdapter.Forecas
         @Nullable
         @BindView(R.id.r_condition)
         lateinit var condition: TextView
-        @BindView(R.id.s_clouds)
-        lateinit var clouds: TextView
         @BindView(R.id.s_maxmintemp)
         lateinit var temparature: TextView
-        @BindView(R.id.s_wind)
-        lateinit var wind: TextView
+
         @BindView(R.id.iv_weather_icon)
         lateinit var weatherIcon: ImageView
 
@@ -84,12 +81,9 @@ class SearchResultsAdapter() : RecyclerView.Adapter<SearchResultsAdapter.Forecas
                     .into(weatherIcon)
             dayAndTime.text = Utils.getDateForLocaleFromUtc(day.dateAndTime)
             condition.text = day.weather?.get(0)?.description?.toUpperCase()
-            clouds.text = resources.getString(R.string.cloud_percentage, day.clouds?.all)
             val tempMin = Utils.getCelsiusFromKelvin(day.main?.tempMin)
             val tempMax = Utils.getCelsiusFromKelvin(day.main?.tempMax)
             temparature.text = "$tempMin - $tempMax"
-            wind.text = resources.getString(R.string.wind_speed,
-                    Utils.roundDoubleToTwoDecimalPoints(day.wind?.speed))
 
         }
 

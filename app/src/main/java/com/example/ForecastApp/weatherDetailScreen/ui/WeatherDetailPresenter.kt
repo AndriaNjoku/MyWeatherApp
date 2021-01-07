@@ -5,7 +5,7 @@ import com.example.ForecastApp.model.weather.Day
 import com.example.ForecastApp.BasePresenter
 
 
-interface DetailFragmentContract {
+interface WeatherDetailPresenter:BasePresenter {
 
     interface View : BasePresenter.View {
 
@@ -16,14 +16,8 @@ interface DetailFragmentContract {
         fun setActivityTitle(name: String?) {
 
         }
-
-
     }
 
-    interface Presenter : BasePresenter.Presenter<View> {
-
-
-        fun attach(context: Context, fragView: View)
         fun getDayDetails(location: String)
-    }
+    fun dispose()
 }

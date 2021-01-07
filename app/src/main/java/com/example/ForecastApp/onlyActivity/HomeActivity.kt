@@ -30,7 +30,6 @@ class HomeActivity : AppCompatActivity(), OnLocationSelectedListener, MainActivi
         super.onCreate(savedInstanceState)
         injectDependencies()
         setContentView(R.layout.activity_home)
-        //TODO use dagger 2 to pass view to presenter
         presenter.initiateNetworkFragment()
         showWeatherSearchFragment()
 
@@ -49,7 +48,7 @@ class HomeActivity : AppCompatActivity(), OnLocationSelectedListener, MainActivi
 
 
     override fun showError(throwable: Throwable) {
-        Log.e(" Home Activity ", throwable.message)
+          Log.e(" Home Activity ", throwable.message.toString())
     }
 
     override fun showWeatherSearchFragment() {
@@ -60,14 +59,13 @@ class HomeActivity : AppCompatActivity(), OnLocationSelectedListener, MainActivi
 
     override fun showSearchResultsFragment(location: String) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.frame, SearchResultsFragment().newInstance(location), "results")
+                .replace(R.id.frame, SearchResultsFragment.newInstance(location), "results")
                 .commit()
     }
 
-
     override fun showDetailsFragment(location: String) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.frame, WeatherDetailFragment().newInstance(location), "detail")
+                .replace(R.id.frame, WeatherDetailFragment.newInstance(location), "detail")
                 .commit()
 
 

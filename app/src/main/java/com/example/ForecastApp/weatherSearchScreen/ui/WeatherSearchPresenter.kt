@@ -6,7 +6,6 @@ import com.example.ForecastApp.BasePresenter
 
 interface WeatherSearchPresenter : BasePresenter {
 
-    fun getWeatherDetails()
     fun setSelectedLocation(toString: String)
     fun dispose()
 

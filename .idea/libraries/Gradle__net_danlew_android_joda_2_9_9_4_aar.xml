@@ -1,11 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: net.danlew:android.joda:2.9.9.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a6d2d945b28e76f3482bd355524a1e38/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a6d2d945b28e76f3482bd355524a1e38/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f680de5f3e55539384abf33cc8161332/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f680de5f3e55539384abf33cc8161332/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f680de5f3e55539384abf33cc8161332/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56906b5aed1c9db7d9676580d39118e8/jetified-android.joda-2.9.9.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56906b5aed1c9db7d9676580d39118e8/jetified-android.joda-2.9.9.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56906b5aed1c9db7d9676580d39118e8/jetified-android.joda-2.9.9.4/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.danlew/android.joda/2.9.9.4/5702bd3eadb6e086355690690ae4b7d3fb9c199e/android.joda-2.9.9.4-javadoc.jar!/" />

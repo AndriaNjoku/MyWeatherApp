@@ -2,76 +2,83 @@ package com.example.ForecastApp.DI.composer
 
 
 import android.app.Activity
-import com.example.ForecastApp.mvp.MainScreenFragment.*
-import com.example.ForecastApp.onlyActivity.HomeActivity
+import android.content.Context
+import androidx.fragment.app.FragmentActivity
+import com.example.ForecastApp.ForecastService
+import com.example.ForecastApp.Utils
+import com.example.ForecastApp.database.ForecastDatabase
+
 import com.example.ForecastApp.useCase.GetWeatherForecast
-import com.example.ForecastApp.weatherDetailScreen.WeatherDetailFragment
-import com.example.ForecastApp.weatherResultsScreen.SearchResultsFragment
+import com.example.ForecastApp.useCase.PojoGetWeatherForecast
+import com.example.ForecastApp.weatherDetailScreen.ui.PojoWeatherDetailPresenter
+import com.example.ForecastApp.weatherDetailScreen.ui.WeatherDetailPresenter
 import com.example.ForecastApp.weatherResultsScreen.ui.PojoSearchResultsPresenter
 
 import com.example.ForecastApp.weatherResultsScreen.ui.SearchResultsPresenter
-import com.example.ForecastApp.weatherSearchScreen.WeatherSearchFragment
 import com.example.ForecastApp.weatherSearchScreen.ui.PojoWeatherSearchPresenter
 import com.example.ForecastApp.weatherSearchScreen.ui.WeatherSearchPresenter
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Scheduler
-import javax.inject.Named
+import io.reactivex.schedulers.Schedulers
 
 @Module
-class WeatherFeatureModule(){
+class WeatherFeatureModule(val activity: FragmentActivity?) {
 
-    companion object {
-        const val FOREGROUND = "foreground"
+
+    @Provides
+    @FragmentScope
+    internal fun provideMainFragmentView(): WeatherSearchPresenter.View {
+        val t = activity as FragmentActivity
+        val result = t.supportFragmentManager.findFragmentByTag("main")
+        return result as WeatherSearchPresenter.View
     }
 
     @Provides
-    @ActivityScope
-    internal fun provideOnlyActivity(mainActivity: HomeActivity): Activity = mainActivity
+    @FragmentScope
+    internal fun provideSearchResultsFragmentView(): SearchResultsPresenter.View {
+        val t = activity as FragmentActivity
+        val result = t.supportFragmentManager.findFragmentByTag("results")
+        return result as SearchResultsPresenter.View
+    }
 
     @Provides
     @FragmentScope
-    internal fun provideMainFragmentView(mainFragment: WeatherSearchFragment): WeatherSearchPresenter.View = mainFragment
-
-    @Provides
-    @FragmentScope
-    internal fun provideSearchResultsFragmentView(searchResultsFragment: SearchResultsFragment): SearchResultsPresenter.View = searchResultsFragment
-
-    @Provides
-    @FragmentScope
-    internal fun provideWeatherDetailsFragmentView(weatherDetailFragment: WeatherDetailFragment): WeatherDetailPresenter.View = weatherDetailFragment
+    internal fun provideWeatherDetailsFragmentView(): WeatherDetailPresenter.View {
+        val t = activity as FragmentActivity
+        val result = t.supportFragmentManager.findFragmentByTag("detail")
+        return result as WeatherDetailPresenter.View
+    }
 
     @Provides
     @FragmentScope
     internal fun provideMainFragmentPresenter(
             view: WeatherSearchPresenter.View,
-            context: Activity,
-            getWeatherForecast: GetWeatherForecast,
-            @Named(FOREGROUND) foreground: Scheduler): WeatherSearchPresenter =
+            getWeatherForecast: GetWeatherForecast): WeatherSearchPresenter =
             PojoWeatherSearchPresenter(
                     view,
-                    context,
-                    getWeatherForecast,
-                    foreground)
+                    activity as Activity,
+                    getWeatherForecast
+
+            )
 
     @Provides
     @FragmentScope
     internal fun provideSearchResultsPresenter(
+            view: SearchResultsPresenter.View,
+            context: Context,
+            getWeatherForecast: GetWeatherForecast): SearchResultsPresenter = PojoSearchResultsPresenter(view, context, getWeatherForecast)
 
-
-
-    ): SearchResultsPresenter = PojoSearchResultsPresenter(myModelInteractor)
-    }
 
     @Provides
     @FragmentScope
-    internal fun provideWeatherDetailsPresenter(myModelInteractor: ApplicationModelContract): WeatherDetailPresenter.Presenter {
+    internal fun provideWeatherDetailsPresenter(
+            view: WeatherDetailPresenter.View,
+            context: Context,
+            getWeatherForecast: GetWeatherForecast): WeatherDetailPresenter = PojoWeatherDetailPresenter(view, context, getWeatherForecast)
 
-        return DetailFragmentPresenter(myModelInteractor)
-    }
-
+    @Provides
+    @FragmentScope
+    internal fun provideWeatherForecastGetter(service: ForecastService, database: ForecastDatabase) : GetWeatherForecast = PojoGetWeatherForecast(service, database)
 
 }
-
-

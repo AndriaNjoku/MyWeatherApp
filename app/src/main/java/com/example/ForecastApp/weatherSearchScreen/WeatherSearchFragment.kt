@@ -1,6 +1,5 @@
 package com.example.ForecastApp.weatherSearchScreen
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,11 +20,12 @@ import com.example.ForecastApp.model.predicitions.Prediction
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
 import com.example.ForecastApp.weatherSearchScreen.ui.WeatherSearchPresenter
 import com.example.ForecastApp.widget.DelayAutoCompleteTextView
+import kotlinx.android.synthetic.main.weather_mainpage_frame.*
 import java.util.*
 import javax.inject.Inject
 
 
-class WeatherSearchFragment: Fragment(), WeatherSearchPresenter.View {
+class WeatherSearchFragment @Inject constructor(): Fragment(), WeatherSearchPresenter.View {
 
     companion object{
         const val THRESHOLD = 3
@@ -38,47 +38,37 @@ class WeatherSearchFragment: Fragment(), WeatherSearchPresenter.View {
 
     lateinit var savedSearchesAdapter: RecentSearchesAdapter
 
-    @BindView(R.id.txt_search)
-    lateinit var mSearchView: DelayAutoCompleteTextView
-
-    @BindView(R.id.mainpage_loading_indicator)
-    lateinit var mProgress: ProgressBar
-
-    @BindView(R.id.mainpage_results)
-    lateinit var mSavedResults: ListView
-
-    @BindView(R.id.btn_clear)
-    lateinit var mCancel: View
-
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         injectDependencies()
         val view = inflater.inflate(R.layout.weather_mainpage_frame, container, false)
-        //unbinder = ButterKnife.bind(this, view)
-        //initialise the adapter logic for the autoCOmplete text search and the recent searches list
-        savedSearchesInit()
-        autoCompleteSearchInit()
 
-        // clear search text
-        mCancel.setOnClickListener {
-            mSearchView.setText("")
-        }
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        savedSearchesInit()
+        autoCompleteSearchInit()
+
+        btn_clear.setOnClickListener {
+            txt_search.setText("")
+        }
+    }
+
     override fun injectDependencies() {
-        App.instance.component.plus(WeatherFeatureModule()).inject(this)
+        App.instance.component.plus(WeatherFeatureModule(activity)).inject(this)
     }
 
     override fun savedSearchesInit() {
         context?.let {
             savedSearchesAdapter = RecentSearchesAdapter(it)
         }
-        mSavedResults.adapter = savedSearchesAdapter
-        mSavedResults.onItemClickListener = AdapterView.OnItemClickListener {
+        mainpage_results.adapter = savedSearchesAdapter
+        mainpage_results.onItemClickListener = AdapterView.OnItemClickListener {
             parent, view, position, id ->
             val forecast = parent.getItemAtPosition(position) as Forecast
             val location = forecast.city?.name.toString()
@@ -89,12 +79,12 @@ class WeatherSearchFragment: Fragment(), WeatherSearchPresenter.View {
     }
 
     override fun autoCompleteSearchInit() {
-        mSearchView.threshold = THRESHOLD //min chars before search
+        txt_search.threshold = THRESHOLD //min chars before search
         context?.let {
-            mSearchView.setAdapter(SearchAutoCompleteAdapter(it))
+            txt_search.setAdapter(SearchAutoCompleteAdapter(it))
         }
-        mSearchView.setLoadingIndicator(mProgress)
-        mSearchView.onItemClickListener = AdapterView.OnItemClickListener {
+        txt_search.setLoadingIndicator(mainpage_loading_indicator)
+        txt_search.onItemClickListener = AdapterView.OnItemClickListener {
             parent, view, position, id ->
 
             val predicition = parent.getItemAtPosition(position) as Prediction
@@ -111,8 +101,8 @@ class WeatherSearchFragment: Fragment(), WeatherSearchPresenter.View {
     }
 
     override fun showProgress(b: Boolean) = when (b) {
-            true -> mProgress.visibility = View.VISIBLE
-            false -> mProgress.visibility = View.INVISIBLE
+            true -> mainpage_loading_indicator.visibility = View.VISIBLE
+            false -> mainpage_loading_indicator.visibility = View.INVISIBLE
         }
 
     override fun onDetach() {
