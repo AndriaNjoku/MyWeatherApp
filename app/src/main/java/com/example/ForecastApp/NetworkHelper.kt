@@ -10,12 +10,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.ForecastApp.mvp.BaseContract
 
 //Network helper fragment will run in the background and provide a network checking service using broadcast receiver
 //receive service calls , performing the network service the results of which will be consumed in the
 
-class NetworkHelper : Fragment(),BaseContract.View {
+class NetworkHelper : Fragment(), BasePresenter.View {
     override fun injectDependencies() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

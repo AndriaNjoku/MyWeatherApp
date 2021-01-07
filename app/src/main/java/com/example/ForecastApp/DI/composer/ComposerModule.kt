@@ -1,9 +1,8 @@
 package com.example.ForecastApp.DI.composer
 
 import android.content.Context
-import com.example.ForecastApp.DI.composer.ActivityScope
-import com.example.ForecastApp.mvp.MainScreenFragment.MainActivityContract
-import com.example.ForecastApp.mvp.MainScreenFragment.MainActivityPresenter
+import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
+import com.example.ForecastApp.onlyActivity.ui.PojoMainActivityPresenter
 
 
 import dagger.Module
@@ -21,8 +20,8 @@ class ComposerModule(private val activityContext: Context) {
 
     @Provides
     @ActivityScope
-    internal fun provideActivityPresenter(myActivityContext: Context): MainActivityContract.Presenter {
+    internal fun provideActivityPresenter(myActivityContext: Context): MainActivityPresenter.Presenter {
 
-        return MainActivityPresenter(myActivityContext)
+        return PojoMainActivityPresenter(myActivityContext)
     }
 }

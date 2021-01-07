@@ -1,6 +1,6 @@
 package com.example.ForecastApp.DI.composer
 
-import com.example.ForecastApp.HomeActivity
+import com.example.ForecastApp.onlyActivity.HomeActivity
 
 import dagger.Component
 

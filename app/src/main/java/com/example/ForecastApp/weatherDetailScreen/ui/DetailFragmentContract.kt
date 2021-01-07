@@ -2,12 +2,12 @@ package com.example.ForecastApp.weatherDetailScreen.ui
 
 import android.content.Context
 import com.example.ForecastApp.model.weather.Day
-import com.example.ForecastApp.mvp.BaseContract
+import com.example.ForecastApp.BasePresenter
 
 
 interface DetailFragmentContract {
 
-    interface View : BaseContract.View {
+    interface View : BasePresenter.View {
 
         fun showForecast(days: List<Day>)
         fun showError(throwable: Throwable)
@@ -20,7 +20,7 @@ interface DetailFragmentContract {
 
     }
 
-    interface Presenter : BaseContract.Presenter<View> {
+    interface Presenter : BasePresenter.Presenter<View> {
 
 
         fun attach(context: Context, fragView: View)

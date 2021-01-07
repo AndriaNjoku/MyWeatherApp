@@ -22,17 +22,17 @@ import com.example.ForecastApp.R
 import com.example.ForecastApp.adapter.WeatherDetailAdapter
 import com.example.ForecastApp.App
 import com.example.ForecastApp.model.weather.Day
-import com.example.ForecastApp.mvp.MainScreenFragment.DetailFragmentContract
-import com.example.ForecastApp.mvp.MainScreenFragment.MainActivityContract
+import com.example.ForecastApp.mvp.MainScreenFragment.WeatherDetailPresenter
+import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
 import javax.inject.Inject
 
 
 
-class WeatherDetailFragment : Fragment(), DetailFragmentContract.View {
+class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
 
 
     @Inject
-    lateinit var presenter: DetailFragmentContract.Presenter
+    lateinit var presenter: WeatherDetailPresenter.Presenter
 
     private val forecastAdapter = WeatherDetailAdapter()
 
@@ -65,7 +65,7 @@ class WeatherDetailFragment : Fragment(), DetailFragmentContract.View {
             recyclerView.layoutManager = LinearLayoutManager(activityContext)
             recyclerView.adapter = forecastAdapter
         presenter.getDayDetails(location)
-        val b = activityContext as MainActivityContract.View
+        val b = activityContext as MainActivityPresenter.View
         searchb.setOnClickListener {
             Log.e("sclick","button clicked ")
             b.showSearchResultsFragment(location)
@@ -95,7 +95,7 @@ class WeatherDetailFragment : Fragment(), DetailFragmentContract.View {
 
     override fun showError(throwable: Throwable) {
         throwable.printStackTrace()
-        val myActivityView = activityContext as MainActivityContract.View
+        val myActivityView = activityContext as MainActivityPresenter.View
 
         myActivityView.showError(throwable)
     }

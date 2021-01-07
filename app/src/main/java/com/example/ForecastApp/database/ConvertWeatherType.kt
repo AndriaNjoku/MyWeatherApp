@@ -10,20 +10,16 @@ object ConvertWeatherType {
 
     @TypeConverter
     @JvmStatic
-    fun stringToListOfWeather(data: String?): List<Weather> {
-        val gson = Gson()
-        if (data == null) {
-            return emptyList()
+    fun stringToListOfWeather(data: String?): List<Weather>  = when(data){
+        null -> emptyList()
+        else -> {
+            val type = object : TypeToken<List<Weather>>(){ }.type
+            Gson().fromJson(data, type)
         }
-        val type = object : TypeToken<List<Weather>>() {
-
-        }.type
-        return gson.fromJson(data, type)
     }
 
     @TypeConverter
     @JvmStatic
-    fun listOfWeatherToString(weatherList: List<Weather>): String {
-        return Gson().toJson(weatherList)
-    }
+    fun listOfWeatherToJson(weatherList: List<Weather>): String = Gson().toJson(weatherList)
+
 }

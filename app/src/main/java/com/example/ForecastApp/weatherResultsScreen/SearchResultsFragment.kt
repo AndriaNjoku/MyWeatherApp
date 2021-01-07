@@ -17,25 +17,25 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
-import com.example.ForecastApp.HomeActivity
+import com.example.ForecastApp.onlyActivity.HomeActivity
 import com.example.ForecastApp.DI.composer.WeatherFeatureModule
 import com.example.ForecastApp.R
 import com.example.ForecastApp.adapter.SearchResultsAdapter
 import com.example.ForecastApp.App
 import com.example.ForecastApp.model.weather.Day
-import com.example.ForecastApp.mvp.MainScreenFragment.MainActivityContract
-import com.example.ForecastApp.weatherResultsScreen.ui.SearchResultsFragmentContract
+import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
+import com.example.ForecastApp.weatherResultsScreen.ui.SearchResultsPresenter
 import javax.inject.Inject
 
 
 
-class SearchResultsFragment : Fragment(), SearchResultsFragmentContract.View{
+class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
 
 
     lateinit var forecastAdapter: SearchResultsAdapter
 
     @Inject
-    lateinit var presenter: SearchResultsFragmentContract.Presenter
+    lateinit var presenter: SearchResultsPresenter.Presenter
 
 
     private lateinit var activityContext: Context
@@ -71,7 +71,7 @@ class SearchResultsFragment : Fragment(), SearchResultsFragmentContract.View{
         presenter.attach(activityContext,this)
         //retrieve the location of the city thats passed in the bundle wehen we created this fragment
         presenter.showSearchResults(location)
-         val b = activityContext as MainActivityContract.View
+         val b = activityContext as MainActivityPresenter.View
         detailb.setOnClickListener {
             Log.e("sclick","button clicked ")
             b.showDetailsFragment(location)
@@ -97,7 +97,7 @@ class SearchResultsFragment : Fragment(), SearchResultsFragmentContract.View{
 
     override fun showError(throwable: Throwable?) {
         throwable?.printStackTrace()
-        val myActivityView = activityContext as MainActivityContract.View
+        val myActivityView = activityContext as MainActivityPresenter.View
 
         myActivityView.showError(throwable!!)
     }
