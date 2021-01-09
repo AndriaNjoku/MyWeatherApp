@@ -1,6 +1,6 @@
-# Forecast_Task
+# WeatherApp
 
-A application i created as part of a technical test to show the 4 day weather forecast. There is an automcomplete search bar
+An application i created as part of a technical test to show the 4 day weather forecast. There is an automcomplete search bar
 with predictions using the Google maps API, the weather API is provided by openweather:https://openweathermap.org/api
 
 Libraries Used:
