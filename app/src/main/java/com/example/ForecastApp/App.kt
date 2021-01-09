@@ -2,10 +2,10 @@ package com.example.ForecastApp
 
 import android.app.Application
 
-import com.example.ForecastApp.DI.app.AppComponent
-import com.example.ForecastApp.DI.app.modules.AppModule
-import com.example.ForecastApp.DI.app.DaggerAppComponent
-import com.example.ForecastApp.DI.app.modules.NetworkModule
+import com.example.ForecastApp.di.app.AppComponent
+import com.example.ForecastApp.di.app.modules.AppModule
+import com.example.ForecastApp.di.app.DaggerAppComponent
+import com.example.ForecastApp.di.app.modules.NetworkModule
 
 import net.danlew.android.joda.JodaTimeAndroid
 

@@ -1,19 +1,20 @@
 package com.example.ForecastApp.weatherDetailScreen
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.example.ForecastApp.App
-import com.example.ForecastApp.DI.composer.WeatherFeatureModule
+import com.example.ForecastApp.di.composer.WeatherFeatureModule
 import com.example.ForecastApp.R
-import com.example.ForecastApp.adapter.WeatherDetailAdapter
+import com.example.ForecastApp.adapter.WeatherResultsAdapter
+import com.example.ForecastApp.model.WEATHERVERSION
 import com.example.ForecastApp.model.weather.Day
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
+import com.example.ForecastApp.useCase.Converter
 import com.example.ForecastApp.weatherDetailScreen.ui.WeatherDetailPresenter
 import kotlinx.android.synthetic.main.forecast_detail_f.*
 import javax.inject.Inject
@@ -24,13 +25,12 @@ class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
     @Inject
     lateinit var presenter: WeatherDetailPresenter
 
-    private val forecastAdapter = WeatherDetailAdapter()
+    @Inject
+    lateinit var converter: Converter
+
+    private lateinit var forecastAdapter: WeatherResultsAdapter
 
     lateinit var location: String
-
-    var day: Int = 0
-
-    var binder: Unbinder? = null
 
     companion object {
 
@@ -40,7 +40,6 @@ class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
                 putString("Location", location)
             }
             detailFragment.arguments = bundle
-
             return detailFragment
         }
     }
@@ -58,6 +57,8 @@ class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         detail_results.layoutManager = LinearLayoutManager(activity)
+        forecastAdapter = WeatherResultsAdapter(converter, WEATHERVERSION.DETAILED)
+
         detail_results.adapter = forecastAdapter
         presenter.getDayDetails(location)
         val activityView = context as MainActivityPresenter.View
@@ -66,11 +67,13 @@ class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
         }
 
         detail_try_again.setOnClickListener {
+            showTryAgain(false)
             presenter.getDayDetails(location)
         }
     }
 
     override fun showForecast(days: List<Day>) {
+        Log.i(" Detail Fragment","This is the detailed weather data : $days")
         forecastAdapter.setData(days)
     }
 
@@ -95,7 +98,6 @@ class WeatherDetailFragment : Fragment(), WeatherDetailPresenter.View {
     }
 
     override fun setActivityTitle(name: String?) {
-
     }
 
     override fun showTryAgain(shouldShow: Boolean) {

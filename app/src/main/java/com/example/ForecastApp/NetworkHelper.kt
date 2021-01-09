@@ -11,12 +11,29 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-//Network helper fragment will run in the background and provide a network checking service using broadcast receiver
-//receive service calls , performing the network service the results of which will be consumed in the
+class NetworkHelper : Fragment(){
 
-class NetworkHelper : Fragment(), BasePresenter.View {
-    override fun injectDependencies() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    companion object {
+        val TAG = "NetworkHelper"
+        val CHECK_INTERNET = "network_connection"
+
+        fun isInternetConnected(context: Context): Boolean {
+            val connec = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+            val mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+
+            if (wifi != null && wifi.isConnected) {
+                return true
+            } else if (mobile != null && mobile.isConnected) {
+                return true
+            }
+            return false
+        }
+
+        fun newInstance(): NetworkHelper {
+            return NetworkHelper()
+        }
     }
 
     private var mActivity: Context? = null
@@ -25,18 +42,11 @@ class NetworkHelper : Fragment(), BasePresenter.View {
     private val onNotice = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-            // we have received the broadcast from our NetworkChangedReceiver , we want to check the intent
-            //for the correct key, retrieve the bool from the value and based on this we can issue a showalert
-            //dialogue in the main activiy
-
 
             if (intent.hasExtra(CHECK_INTERNET) && !intent.getBooleanExtra(CHECK_INTERNET, true)) {
                 showAlertDialog(mActivity, "Internet Connection",
                         "No internet connection available.\n\n" + "Please check your internet connection and try again.")
             } else {
-                //if the connection is reset then the Network CHanged receiver will send another broadcast and we can dismiss the
-                //dialogue
-
                 if (mAlertDialog != null && mAlertDialog!!.isShowing) {
                     mAlertDialog!!.dismiss()
                     mAlertDialog = null
@@ -55,12 +65,10 @@ class NetworkHelper : Fragment(), BasePresenter.View {
     override fun onAttach(activity: Context) {
         super.onAttach(activity)
         mActivity = activity
-        //throw new IllegalArgumentException("activity must extend BaseActivity and implement LocationHelper.LocationCallback");
 
     }
 
     override fun onResume() {
-
         super.onResume()
         val iff = IntentFilter(CHECK_INTERNET)
         LocalBroadcastManager.getInstance(mActivity!!).registerReceiver(onNotice, iff)
@@ -68,7 +76,6 @@ class NetworkHelper : Fragment(), BasePresenter.View {
             showAlertDialog(mActivity, "Internet Connection",
                     "No internet connection available.\n\n" + "Please check your internet connection and try again.")
         }
-
     }
 
     override fun onPause() {
@@ -111,14 +118,11 @@ class NetworkHelper : Fragment(), BasePresenter.View {
         mAlertDialog!!.show()
     }
 
-
-
     fun isWifiConnected(context: Context): Boolean {
         val connec = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
         return wifi != null && wifi.isConnected
-
     }
 
     fun isMobileDataConnected(context: Context): Boolean {
@@ -126,36 +130,6 @@ class NetworkHelper : Fragment(), BasePresenter.View {
         val mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
 
         return mobile != null && mobile.isConnected
-
-    }
-
-
-    companion object {
-        val TAG = "NetworkHelper"
-        val CHECK_INTERNET = "network_connection"
-
-        fun isInternetConnected(context: Context): Boolean {
-            val connec = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val wifi = connec.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-            val mobile = connec.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-
-            // Here if condition check for wifi and mobile network is available or
-            // not.
-            // If anyone of them is available or connected then it will return true,
-            // otherwise false;
-
-            if (wifi != null && wifi.isConnected) {
-                return true
-            } else if (mobile != null && mobile.isConnected) {
-                return true
-            }
-            return false
-        }
-
-
-        fun newInstance(): NetworkHelper {
-            return NetworkHelper()
-        }
     }
 }
 

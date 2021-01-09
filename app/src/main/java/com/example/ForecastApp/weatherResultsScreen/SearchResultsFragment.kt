@@ -2,51 +2,41 @@ package com.example.ForecastApp.weatherResultsScreen
 
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import com.example.ForecastApp.onlyActivity.HomeActivity
-import com.example.ForecastApp.DI.composer.WeatherFeatureModule
+import com.example.ForecastApp.di.composer.WeatherFeatureModule
 import com.example.ForecastApp.R
-import com.example.ForecastApp.adapter.SearchResultsAdapter
 import com.example.ForecastApp.App
+import com.example.ForecastApp.adapter.WeatherResultsAdapter
+import com.example.ForecastApp.model.WEATHERVERSION
 import com.example.ForecastApp.model.weather.Day
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
+import com.example.ForecastApp.useCase.Converter
 import com.example.ForecastApp.weatherResultsScreen.ui.SearchResultsPresenter
 import kotlinx.android.synthetic.main.search_results_frame.*
 import javax.inject.Inject
 
 
-
 class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
 
-
-    lateinit var forecastAdapter: SearchResultsAdapter
 
     @Inject
     lateinit var presenter: SearchResultsPresenter
 
-    var binder: Unbinder? = null
+    @Inject
+    lateinit var converter: Converter
+
+    lateinit var forecastAdapter : WeatherResultsAdapter
 
     lateinit var location : String
 
     companion object{
 
         fun newInstance(location:String): SearchResultsFragment {
-
-            Log.e("SearchResults","creating fragment")
 
             val searchResultsFragment = SearchResultsFragment()
             val bundle = Bundle().apply {
@@ -68,8 +58,6 @@ class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
         val a = context as HomeActivity
         val bar = a.supportActionBar
         bar?.title =location
-        forecastAdapter= SearchResultsAdapter()
-
         return view
     }
 
@@ -77,13 +65,14 @@ class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
         super.onViewCreated(view, savedInstanceState)
 
         search_results.layoutManager = LinearLayoutManager(context)
+        forecastAdapter = WeatherResultsAdapter(converter, WEATHERVERSION.BASIC)
         search_results.adapter = forecastAdapter
         //retrieve the location of the city thats passed in the bundle wehen we created this fragment
 
         presenter.showSearchResults(location)
         val b = context as MainActivityPresenter.View
         detail_button.setOnClickListener {
-            Log.e("sclick", "button clicked ")
+
             b.showDetailsFragment(location)
 
             search_try_again.setOnClickListener {
@@ -112,7 +101,6 @@ class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
     }
 
     override fun setActivityTitle(name: String?){
-
     }
 
     override fun showTryAgain(shouldShow: Boolean) {
@@ -124,9 +112,6 @@ class SearchResultsFragment : Fragment(), SearchResultsPresenter.View{
             search_progress.visibility = View.VISIBLE
         }
     }
-
-
-
 }
 
 

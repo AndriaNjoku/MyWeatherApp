@@ -1,42 +1,49 @@
 package com.example.ForecastApp.useCase
 
-import com.example.ForecastApp.Constants
-import com.example.ForecastApp.ForecastService
-import com.example.ForecastApp.database.ForecastDatabase
+import android.util.Log
+import com.example.ForecastApp.di.composer.ActivityScope
 import com.example.ForecastApp.model.weather.Forecast
+import com.example.ForecastApp.repository.NetWeatherForecast
+import com.example.ForecastApp.repository.RoomWeatherForecast
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class PojoGetWeatherForecast @Inject constructor(val service: ForecastService, val database: ForecastDatabase) : GetWeatherForecast {
+
+
+@ActivityScope
+class PojoGetWeatherForecast @Inject constructor(
+        val networkChecker: NetworkChecker,
+        private val localWeatherForecast: RoomWeatherForecast,
+        private val netWeatherForecast: NetWeatherForecast) : GetWeatherForecast {
 
     private fun forecastFromLocal(location: String): Observable<Forecast> =
-            database.forecastDao()
-                    .forecast(location)
+            localWeatherForecast.weatherForecast(location)
                     .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
                     .toObservable()
 
-    private fun forecastFromNetwork(location: String): Observable<Forecast> {
-        return service.getFiveDayForecast(location, Constants.API_KEY)
-                .doOnNext {
-                    database.forecastDao()
-                            .insertForecasts(it)
-                }
-    }
+    private fun forecastFromNetwork(location: String): Observable<Forecast> =
+            netWeatherForecast.weatherForecast(location).cache()
+                    .doOnNext {
+                        localWeatherForecast.saveForecast(it)
+                    }
 
-    override fun getBasic(isOnline: Boolean, location: String): Observable<Forecast> = when (isOnline) {
+    override fun getBasic(location: String): Observable<Forecast> = when (networkChecker.isOnline()) {
         true -> forecastFromNetwork(location)
         false -> forecastFromLocal(location)
     }
 
-    override fun getDetailed(location: String): Observable<Forecast> =
-            forecastFromLocal(location)
+    override fun getDetailed(location: String): Observable<Forecast> = when (networkChecker.isOnline()) {
+        true -> forecastFromNetwork(location)
+        false -> forecastFromLocal(location)
+    }
 
-    override fun getRecentForecasts(): Observable<List<Forecast>>  =
-            database
-            .forecastDao()
-            .forecastAll
-            .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
+    override fun getRecentForecasts(): Observable<List<Forecast>> =
+            localWeatherForecast
+                    .allForecasts()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toObservable()
 
 }

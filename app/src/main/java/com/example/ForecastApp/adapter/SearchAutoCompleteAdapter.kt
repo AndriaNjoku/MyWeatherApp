@@ -9,7 +9,6 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import com.example.ForecastApp.Constants.AUTOCOMPLETE_API_URL
 import com.example.ForecastApp.R
 import com.example.ForecastApp.App
 import com.example.ForecastApp.model.predicitions.Prediction
@@ -22,6 +21,7 @@ import java.util.*
 class SearchAutoCompleteAdapter(private val mContext: Context) : BaseAdapter(), Filterable {
 
     companion object {
+        private const val AUTOCOMPLETE_API_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%s&types=(regions)&sensor=false&key="
         private var URL = AUTOCOMPLETE_API_URL + App.instance.getString(R.string.google_api_key)
         fun getLocationSearchUrl(queryText: String): String? = String.format(URL, URLEncoder.encode(queryText, "UTF-8"))
     }

@@ -18,6 +18,8 @@ interface WeatherSearchPresenter : BasePresenter {
         fun showProgress(b: Boolean)
         fun showError(error: Throwable)
     }
+
+    fun showSavedSearches()
 }
 
 

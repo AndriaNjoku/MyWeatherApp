@@ -3,9 +3,9 @@ package com.example.ForecastApp.onlyActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ForecastApp.DI.composer.ComposerComponent
-import com.example.ForecastApp.DI.composer.ComposerModule
-import com.example.ForecastApp.DI.composer.DaggerComposerComponent
+import com.example.ForecastApp.di.composer.ComposerComponent
+import com.example.ForecastApp.di.composer.ComposerModule
+import com.example.ForecastApp.di.composer.DaggerComposerComponent
 import com.example.ForecastApp.R
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
 import com.example.ForecastApp.weatherDetailScreen.WeatherDetailFragment

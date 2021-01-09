@@ -14,16 +14,17 @@ import io.reactivex.schedulers.Schedulers
 class PojoWeatherSearchPresenter(
         val view: WeatherSearchPresenter.View,
         private val mainActivityContext: Activity,
-        getWeather: GetWeatherForecast
+        private val getWeather: GetWeatherForecast,
+        private val foreground: Scheduler
 ) : WeatherSearchPresenter {
 
     private val disposable = CompositeDisposable()
     private var listener: OnLocationSelectedListener? = null
 
-    init {
+    override fun showSavedSearches(){
         disposable.add(getWeather.getRecentForecasts()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(foreground)
                 .doOnError { view.showError(it) }
                 .subscribe { view.showRecentSavedSearches(it) })
     }

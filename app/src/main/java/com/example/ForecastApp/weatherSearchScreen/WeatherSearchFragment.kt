@@ -6,11 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import butterknife.BindView
-import com.example.ForecastApp.DI.composer.WeatherFeatureModule
+import com.example.ForecastApp.di.composer.WeatherFeatureModule
 import com.example.ForecastApp.R
 import com.example.ForecastApp.adapter.RecentSearchesAdapter
 import com.example.ForecastApp.adapter.SearchAutoCompleteAdapter
@@ -19,7 +16,6 @@ import com.example.ForecastApp.model.weather.Forecast
 import com.example.ForecastApp.model.predicitions.Prediction
 import com.example.ForecastApp.onlyActivity.ui.MainActivityPresenter
 import com.example.ForecastApp.weatherSearchScreen.ui.WeatherSearchPresenter
-import com.example.ForecastApp.widget.DelayAutoCompleteTextView
 import kotlinx.android.synthetic.main.weather_mainpage_frame.*
 import java.util.*
 import javax.inject.Inject
@@ -44,7 +40,6 @@ class WeatherSearchFragment @Inject constructor(): Fragment(), WeatherSearchPres
     ): View? {
         injectDependencies()
         val view = inflater.inflate(R.layout.weather_mainpage_frame, container, false)
-
         return view
     }
 
@@ -53,6 +48,8 @@ class WeatherSearchFragment @Inject constructor(): Fragment(), WeatherSearchPres
 
         savedSearchesInit()
         autoCompleteSearchInit()
+
+        presenter.showSavedSearches()
 
         btn_clear.setOnClickListener {
             txt_search.setText("")
