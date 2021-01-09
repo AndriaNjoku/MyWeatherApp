@@ -12,14 +12,14 @@ import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import org.junit.jupiter.api.Test
 
-internal class PojoSearchResultsPresenterTest() {
+class PojoSearchResultsPresenterTest() {
 
 
     @Test
     fun testPresenterCallsUseCase() {
 
         val mockWeatherGetter = mock<GetWeatherForecast> {
-            on { getBasic(any(), any()) } doReturn Observable.never()
+            on { getBasic( any()) } doReturn Observable.never()
         }
 
         // Given
@@ -34,7 +34,7 @@ internal class PojoSearchResultsPresenterTest() {
 
         sut.showSearchResults("location")
         //Then
-        verify(mockWeatherGetter, times(1)).getBasic(any(), any())
+        verify(mockWeatherGetter, times(1)).getBasic(any())
     }
 
     @Test
@@ -51,7 +51,7 @@ internal class PojoSearchResultsPresenterTest() {
         }
 
         val mockWeatherGetter = mock<GetWeatherForecast> {
-            on { getBasic(any(), any()) } doReturn Observable.just(mockedWeather)
+            on { getBasic(any()) } doReturn Observable.just(mockedWeather)
         }
 
         val mockedView = mock<SearchResultsPresenter.View>()
@@ -66,7 +66,6 @@ internal class PojoSearchResultsPresenterTest() {
 
         //When
         // No need for when we initiate inside of init
-
 
         sut.showSearchResults("location")
         //Then

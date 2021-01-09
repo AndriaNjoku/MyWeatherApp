@@ -14,18 +14,18 @@ import io.reactivex.schedulers.Schedulers
 
 import org.junit.jupiter.api.Test
 
-internal class WeatherSearchFragmentTest{
+class WeatherSearchFragmentTest{
 
 
     @Test
-    fun testPresenterCallsUseCase() {
+    fun testPresenterCallsReceentSearchesUseCase() {
 
         val mockWeatherGetter = mock<GetWeatherForecast> {
             on { getRecentForecasts() } doReturn Observable.never()
         }
 
         // Given
-        PojoWeatherSearchPresenter(
+        val sut =PojoWeatherSearchPresenter(
                 mock(),
                 mock(),
                 mockWeatherGetter,
@@ -33,13 +33,12 @@ internal class WeatherSearchFragmentTest{
         )
 
         //When
-        // No need for when we initiate inside of init
+        sut.showSavedSearches()
+
 
         //Then
         verify(mockWeatherGetter, times(1)).getRecentForecasts()
     }
-
-
 
     @Test
     fun testCallToGetRecentForecastsReturnsTheMockedResponse() {
